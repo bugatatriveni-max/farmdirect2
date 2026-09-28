@@ -154,6 +154,8 @@ def _calc_expected_time(slot_time: str, position_in_slot: int, avg_mins: int = 1
 
 class BookingCreateRequest(BaseModel):
     farmer_name: Optional[str] = Field(None, alias="farmerName")
+    name: Optional[str] = None
+    farmerName: Optional[str] = None
     mobile: Optional[str] = None
     kisan_id: Optional[str] = Field(None, alias="kisanId")
     aadhaar: Optional[str] = None
@@ -318,7 +320,7 @@ async def create_booking(req: BookingCreateRequest):
     Uses SQLite immediate transaction locking to guarantee atomic concurrency safety.
     """
     # 1. Comprehensive Backend Validation
-    f_name = (req.farmer_name or "").strip()
+    f_name = (req.farmer_name or req.name or req.farmerName or "").strip()
     if not f_name or len(f_name) < 2:
         raise HTTPException(status_code=400, detail="Farmer name is required (minimum 2 characters).")
 

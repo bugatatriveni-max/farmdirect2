@@ -372,6 +372,22 @@ def init_db():
     );
     """)
 
+    # 22. In-App Notifications
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS in_app_notifications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        token TEXT NOT NULL,
+        mobile TEXT,
+        title TEXT NOT NULL,
+        message TEXT NOT NULL,
+        type TEXT NOT NULL,
+        lang TEXT DEFAULT 'te',
+        is_read INTEGER DEFAULT 0,
+        is_cleared INTEGER DEFAULT 0,
+        created_at TEXT
+    );
+    """)
+
     conn.commit()
     seed_initial_data(conn)
     conn.close()
