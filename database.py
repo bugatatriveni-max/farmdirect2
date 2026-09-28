@@ -287,6 +287,7 @@ def init_db():
         vehicle_no TEXT,
         slot_date TEXT NOT NULL,
         slot_time TEXT NOT NULL,
+        shift_id TEXT DEFAULT 'early-morning',
         gate_no TEXT,
         status TEXT DEFAULT 'booked',
         queue_position INTEGER DEFAULT 0,
@@ -889,6 +890,7 @@ def seed_initial_data(conn):
         except Exception:
             pass
 
+    safe_add_col("bookings", "shift_id", "TEXT DEFAULT 'early-morning'")
     safe_add_col("bookings", "village", "TEXT")
     safe_add_col("bookings", "token_number", "INTEGER DEFAULT 1")
     safe_add_col("bookings", "preferred_slot", "TEXT")
