@@ -1,0 +1,17 @@
+{
+  "name": "RythuSeva - Smart Farmer Procurement & Yard Booking",
+  "short_name": "RythuSeva",
+  "description": "Smart Farmer Procurement, Real-Time Capacity Queue Management, Net Profit Mandi Calculator, All India Market Yards, Multi-lingual Voice AI.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#064e3b",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
