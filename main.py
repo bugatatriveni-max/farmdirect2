@@ -3,44 +3,45 @@ import os
 import types
 from pathlib import Path
 
-# Setup paths
+# ─────────────────────────────────────────────────────────────────────────────
+# Universal Namespace Mapping (Connects backend.services, backend.routers, etc.)
+# ─────────────────────────────────────────────────────────────────────────────
 ROOT_DIR = Path(__file__).resolve().parent
 
-for _p in [
-    ROOT_DIR,
-    ROOT_DIR / "backend",
-    ROOT_DIR / "routers",
-    ROOT_DIR / "backend" / "routers",
-    ROOT_DIR / "services",
-    ROOT_DIR / "backend" / "services"
-]:
-    if _p.exists() and str(_p) not in sys.path:
-        sys.path.insert(0, str(_p))
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
-# Create virtual 'backend' package mapping if files are flat in root
-if "backend" not in sys.modules and not (ROOT_DIR / "backend").exists():
-    _backend_pkg = types.ModuleType("backend")
-    _backend_pkg.__path__ = [str(ROOT_DIR)]
-    sys.modules["backend"] = _backend_pkg
-    
-    try:
-        import config as _cfg
-        sys.modules["backend.config"] = _cfg
-    except Exception:
-        pass
-        
-    try:
-        import database as _db
-        sys.modules["backend.database"] = _db
-    except Exception:
-        pass
-        
-    try:
-        import models as _models
-        sys.modules["backend.models"] = _models
-    except Exception:
-        pass
+# Map 'backend' package
+_b = types.ModuleType("backend")
+_b.__path__ = [str(ROOT_DIR), str(ROOT_DIR / "backend")]
+sys.modules["backend"] = _b
 
+# Map 'backend.services' package
+_b_services = types.ModuleType("backend.services")
+_b_services.__path__ = [str(ROOT_DIR), str(ROOT_DIR / "services"), str(ROOT_DIR / "backend" / "services")]
+sys.modules["backend.services"] = _b_services
+_b.services = _b_services
+
+# Map 'backend.routers' package
+_b_routers = types.ModuleType("backend.routers")
+_b_routers.__path__ = [str(ROOT_DIR), str(ROOT_DIR / "routers"), str(ROOT_DIR / "backend" / "routers")]
+sys.modules["backend.routers"] = _b_routers
+_b.routers = _b_routers
+
+# Map root 'services' and 'routers'
+if "services" not in sys.modules:
+    _services = types.ModuleType("services")
+    _services.__path__ = [str(ROOT_DIR), str(ROOT_DIR / "services"), str(ROOT_DIR / "backend" / "services")]
+    sys.modules["services"] = _services
+
+if "routers" not in sys.modules:
+    _routers = types.ModuleType("routers")
+    _routers.__path__ = [str(ROOT_DIR), str(ROOT_DIR / "routers"), str(ROOT_DIR / "backend" / "routers")]
+    sys.modules["routers"] = _routers
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FastAPI Application & REST Routers
+# ─────────────────────────────────────────────────────────────────────────────
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -49,24 +50,19 @@ import logging
 try:
     from backend.database import init_db
 except Exception:
-    try:
-        from database import init_db
-    except Exception:
-        def init_db(): pass
+    def init_db(): pass
 
 try:
-    from backend.routers import markets, prices, recommendations, voice, admin, auth, bookings
-except Exception:
-    try:
-        from routers import markets, prices, recommendations, voice, admin, auth, bookings
-    except Exception:
-        import markets
-        import prices
-        import recommendations
-        import voice
-        import admin
-        import auth
-        import bookings
+    from backend.routers.markets import router as r_markets
+    from backend.routers.prices import router as r_prices
+    from backend.routers.recommendations import router as r_recs
+    from backend.routers.voice import router as r_voice
+    from backend.routers.admin import router as r_admin
+    from backend.routers.auth import router as r_auth
+    from backend.routers.bookings import router as r_bookings
+except Exception as e:
+    print(f"Router loading fallback notice: {e}")
+    r_markets = r_prices = r_recs = r_voice = r_admin = r_auth = r_bookings = None
 
 logger = logging.getLogger("farmdirect.server")
 
@@ -94,21 +90,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register REST Routers
-try: app.include_router(recommendations.router)
-except Exception: pass
-try: app.include_router(markets.router)
-except Exception: pass
-try: app.include_router(prices.router)
-except Exception: pass
-try: app.include_router(voice.router)
-except Exception: pass
-try: app.include_router(admin.router)
-except Exception: pass
-try: app.include_router(auth.router)
-except Exception: pass
-try: app.include_router(bookings.router)
-except Exception: pass
+# Register Routers
+for r in [r_markets, r_prices, r_recs, r_voice, r_admin, r_auth, r_bookings]:
+    if r:
+        try:
+            app.include_router(r)
+        except Exception:
+            pass
 
 @app.on_event("startup")
 def on_startup():
@@ -126,13 +114,7 @@ def health_check():
 try:
     from backend.services.socket_manager import socket_manager
 except Exception:
-    try:
-        from services.socket_manager import socket_manager
-    except Exception:
-        try:
-            from socket_manager import socket_manager
-        except Exception:
-            socket_manager = None
+    socket_manager = None
 
 @app.websocket("/ws/farmer/{client_id}")
 async def ws_farmer(websocket: WebSocket, client_id: str):
@@ -159,7 +141,7 @@ async def ws_admin(websocket: WebSocket):
             socket_manager.disconnect_admin(websocket)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Universal Static & Asset File Resolver (Finds files whether in subfolder or root)
+# Universal Static & Asset File Resolver
 # ─────────────────────────────────────────────────────────────────────────────
 def resolve_file(filename: str):
     name = Path(filename).name
