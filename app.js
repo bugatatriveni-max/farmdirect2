@@ -270,6 +270,8 @@ class RythuSevaApp {
       el.setAttribute('placeholder', t(key));
     });
 
+    this.renderActiveUser();
+
     if (typeof this.renderBestSellingDestinations === 'function') {
       this.renderBestSellingDestinations(this.activeCropFilter || 'chilli');
     }

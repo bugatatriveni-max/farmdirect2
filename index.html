@@ -934,13 +934,13 @@
         <!-- Admin Header -->
         <div class="admin-header-strip">
           <div>
-            <span style="font-size:0.78rem; background:rgba(255,255,255,0.18); padding:4px 12px; border-radius:999px; font-weight:700; letter-spacing:0.5px;">🏛️ Mandi Procurement Officer Console</span>
-            <h2 style="margin:10px 0 4px; font-size:1.45rem;">రైతుసేవ అడ్మిన్ నిర్వహణ డాష్‌బోర్డ్ (Admin Dashboard)</h2>
-            <p style="margin:0; font-size:0.88rem; color:#d1fae5;">Review farmer slot bookings, advance status in real-time, and trigger automatic notification & SMS events.</p>
+            <span style="font-size:0.78rem; background:rgba(255,255,255,0.18); padding:4px 12px; border-radius:999px; font-weight:700; letter-spacing:0.5px;" data-i18n="adminOfficerBadge">🏛️ Mandi Procurement Officer Console</span>
+            <h2 style="margin:10px 0 4px; font-size:1.45rem;" data-i18n="adminDashTitle">రైతుసేవ అడ్మిన్ నిర్వహణ డాష్‌బోర్డ్ (Admin Dashboard)</h2>
+            <p style="margin:0; font-size:0.88rem; color:#d1fae5;" data-i18n="adminConsoleSubtitle">Review farmer slot bookings, advance status in real-time, and trigger automatic notification & SMS events.</p>
           </div>
           <div style="display:flex; gap:10px; align-items:center;">
-            <button type="button" id="btnAdminRefreshBookings" class="btn btn-outline" style="color:#fff; border-color:#fff; font-size:0.85rem;">🔄 తాజా సమాచారం (Refresh)</button>
-            <button type="button" id="btnAdminLogout" class="btn btn-outline" style="color:#fca5a5; border-color:#fca5a5; font-size:0.85rem;" title="Sign out of Mandi Officer Console">🚪 లాగ్ అవుట్ (Logout)</button>
+            <button type="button" id="btnAdminRefreshBookings" class="btn btn-outline" style="color:#fff; border-color:#fff; font-size:0.85rem;" data-i18n="btnAdminRefresh">🔄 Refresh</button>
+            <button type="button" id="btnAdminLogout" class="btn btn-outline" style="color:#fca5a5; border-color:#fca5a5; font-size:0.85rem;" title="Sign out of Mandi Officer Console" data-i18n="btnAdminLogout">🚪 Logout</button>
           </div>
         </div>
 
@@ -960,17 +960,17 @@
 
           <!-- Control Action Buttons Row -->
           <div class="admin-qc-actions-row">
-            <button type="button" class="btn btn-primary" id="btnAdminNextToken" title="Complete current token and call next waiting farmer">
-              ⏭️ తదుపరి టోకెన్ పిలవండి (Complete & Next Token)
+            <button type="button" class="btn btn-primary" id="btnAdminNextToken" title="Complete current token and call next waiting farmer" data-i18n="btnNextToken">
+              ⏭️ Complete & Next Token
             </button>
-            <button type="button" class="btn btn-secondary" id="btnAdminMarkProcessing" title="Mark current token as active weighing">
-              ⚖️ తూకం ప్రారంభించండి (Mark Processing)
+            <button type="button" class="btn btn-secondary" id="btnAdminMarkProcessing" title="Mark current token as active weighing" data-i18n="btnMarkProcessing">
+              ⚖️ Mark Processing
             </button>
-            <button type="button" class="btn btn-outline" id="btnAdminPauseQueue" style="color:#d97706; border-color:#d97706;" title="Temporarily pause mandi inward operations">
-              ⏸️ క్యూ నిలిపివేయండి (Pause Queue)
+            <button type="button" class="btn btn-outline" id="btnAdminPauseQueue" style="color:#d97706; border-color:#d97706;" title="Temporarily pause mandi inward operations" data-i18n="btnPauseQueue">
+              ⏸️ Pause Queue
             </button>
-            <button type="button" class="btn btn-outline" id="btnAdminResumeQueue" style="color:#059669; border-color:#059669; display:none;" title="Resume mandi operations">
-              ▶️ పునఃప్రారంభించండి (Resume Queue)
+            <button type="button" class="btn btn-outline" id="btnAdminResumeQueue" style="color:#059669; border-color:#059669; display:none;" title="Resume mandi operations" data-i18n="btnResumeQueue">
+              ▶️ Resume Queue
             </button>
           </div>
 
